@@ -12,6 +12,8 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 
+import cn.com.jseo.link.LinkHunter;
+
 public class SitmapGenerate {
 //	<?xml version="1.0" encoding="utf-8"?>
 //	<!-- XML文件需以utf-8编码-->
@@ -39,7 +41,9 @@ public class SitmapGenerate {
    
    public void generateSitMap(String sitUrl,String dest) throws Exception{
 	   LinkHunter hunter=new LinkHunter();
-	   List<String> allLinks=hunter.getAllLinks(sitUrl);
+	   List<String> allLinks=hunter.getAllSitLinks(sitUrl);
+	   hunter.getAllCssLinks(sitUrl);
+	   hunter.getAllJsLinks(sitUrl);
 	   
 	   Element root = DocumentHelper.createElement("urlset");  
        Document document = DocumentHelper.createDocument(root);  
@@ -51,11 +55,6 @@ public class SitmapGenerate {
     	   url.addElement("lastmod").addText(lastMod);
     	   url.addElement("changefreq").addText("daily");
        }
-       
-         
-       
-                 
-         
        //把生成的xml文档存放在硬盘上  true代表是否换行  
        OutputFormat format = new OutputFormat("    ",true);  
        format.setEncoding("UTF-8");//设置编码格式  
