@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
@@ -15,8 +17,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+
+import cn.com.jseo.link.LinkHunter;
 
 public class HttpClientSupport {
 	private Log log = LogFactory.getLog(this.getClass());
@@ -36,21 +41,21 @@ public class HttpClientSupport {
 
 	private void showResponse(HttpResponse response) throws ParseException,
 			IOException {
-		log.debug("requset result:");
-		log.debug(response.getStatusLine().toString());// 响应状态
-		log.debug("-----------------------------------");
+		log.info("requset result:");
+		log.info(response.getStatusLine().toString());// 响应状态
+		log.info("-----------------------------------");
 
 		Header[] heard = response.getAllHeaders();// 响应头
-		log.debug("response heard:");
+		log.info("response heard:");
 		for (int i = 0; i < heard.length; i++) {
-			log.debug(heard[i]);
+			log.info(heard[i]);
 		}
-		log.debug("-----------------------------------");
+		log.info("-----------------------------------");
 		HttpEntity entity = response.getEntity();// 响应实体/内容
-		log.debug("response content length:" + entity.getContentLength());
-		log.debug("response content:");
+		log.info("response content length:" + entity.getContentLength());
+		log.info("response content:");
 	
-		log.debug(EntityUtils.toString(entity));
+		log.info(EntityUtils.toString(entity));
 		
 	}
 
@@ -66,6 +71,10 @@ public class HttpClientSupport {
 			postMethod = new HttpPost(uri);
 			
 			postMethod.setEntity(entity);//设置请求实体，例如表单数据
+			postMethod.setHeader("User-Agent", "curl/7.12.1");
+			postMethod.setHeader("Host" , "data.zz.baidu.com ");
+			postMethod.setHeader("Content-Type" , "text/plain;charset=UTF-8"); 
+//			postMethod.setHeader("Content-Length" , String.valueOf(entity.getContentLength())); 
 		    exctueRequest(postMethod); // 执行请求，获取HttpResponse对象
 		
 	}
@@ -75,13 +84,13 @@ public class HttpClientSupport {
 	  
 	  try {
 		
-		  log.debug("excute request:"+request.getURI());
+		  log.info("excute request:"+request.getURI());
 		  if(request instanceof HttpPost){
-			  log.debug("request "+((HttpPost)request).getEntity().getContentType());
-			  log.debug("request entity:"+ EntityUtils.toString(((HttpPost)request).getEntity(),"UTF-8"));
+			  log.info("request "+((HttpPost)request).getEntity().getContentType());
+			  log.info("request entity:"+ EntityUtils.toString(((HttpPost)request).getEntity(),"UTF-8"));
 			  
 		  }
-		   log.debug("-----------------------------------");
+		   log.info("-----------------------------------");
 		response=this.getClient().execute(request);//执行请求，获取HttpResponse对象
 		showResponse(response);
 		int statuscode = response.getStatusLine().getStatusCode();//处理重定向
@@ -91,12 +100,12 @@ public class HttpClientSupport {
 			Header redirectLocation=response.getFirstHeader("Location");
 			String newuri=redirectLocation.getValue();
 		      if((newuri!=null)||(!newuri.equals(""))){
-		         log.debug("redirect to "+newuri);
+		         log.info("redirect to "+newuri);
 		      request.setURI(new URI(newuri));
 		      response=this.getClient().execute(request);
 		      showResponse(response);
 		   }else {
-			   log.debug("Invalid redirect");
+			   log.info("Invalid redirect");
 	  }
 	  
 		}
@@ -108,39 +117,19 @@ public class HttpClientSupport {
 	  return response;
 	  
   }
-//   public InputStreamEntity createStreamEntity(ByteInputStream bis,Long EntitySize,ContentType type){
-//	   InputStreamEntity  uefEntity=new InputStreamEntity(bos.newInputStream(),bos.size(),contentType);
-//   }
-	public static void main(String[] args) {
+
+	public static void main(String[] args) throws Exception {
+		//测试百度主动推送
+		String url="http://data.zz.baidu.com/urls?site=justin-x.cn&token=SP174q9CqvSyOjn7";
 		HttpClientSupport client = new HttpClientSupport();
-//		client.doGet("http://www.baidu.com/s?wd=HttpClient");
-//		
-//		List<NameValuePair> formparams = new ArrayList<NameValuePair>();// 设置表格参数
-//		formparams.add(new BasicNameValuePair("usrname", "admin"));
-//		formparams.add(new BasicNameValuePair("password", "123456"));
-//		UrlEncodedFormEntity uefEntity = null;
-//		try {
-//			uefEntity = new UrlEncodedFormEntity(formparams, "UTF-8");//获取实体对象
-//		} catch (UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		}
-//		try {
-//		String soapRequestData = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-//				                 + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-//				                 + " <soap:Body>"
-//				                + " <ns2:sayHello xmlns:ns2=\"http://hellowWorld.test.server.com/\">"
-//			                + " <name>蛋蛋</name>"
-//				                + " </ns2:sayHello>"
-//				            + "</soap:Body>"
-//				                 + " </soap:Envelope>";
-//		byte[] b=soapRequestData.getBytes("utf-8");
-//		InputStream is=new ByteInputStream(b, b.length);
-//		ContentType contentType= ContentType.create("application/xml", Charset.forName("UTF-8"));
-//		InputStreamEntity  uefEntity=new InputStreamEntity(is, b.length,contentType);
-//		client.doPost("http://localhost:8080/ws/HelloWorld",uefEntity);
-//		} catch (UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		}
-		client.doGet("http://api.map.baidu.com/location/ip?ak=TceKupTf4WRoGoPBVbNhHYpV");
+		
+		 LinkHunter hunter=new LinkHunter();
+		   List<String> allLinks=hunter.getAllSitLinks("http://justin-x.cn");
+		   StringBuffer buffer=new StringBuffer();
+		   for(String s:allLinks){
+			   buffer.append(s).append("%n");
+		   }
+		client.doPost(url, new StringEntity(String.format(buffer.toString())));
+
 	}
 }

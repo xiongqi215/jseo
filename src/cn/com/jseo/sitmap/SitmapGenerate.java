@@ -42,8 +42,6 @@ public class SitmapGenerate {
    public void generateSitMap(String sitUrl,String dest) throws Exception{
 	   LinkHunter hunter=new LinkHunter();
 	   List<String> allLinks=hunter.getAllSitLinks(sitUrl);
-	   hunter.getAllCssLinks(sitUrl);
-	   hunter.getAllJsLinks(sitUrl);
 	   
 	   Element root = DocumentHelper.createElement("urlset");  
        Document document = DocumentHelper.createDocument(root);  
