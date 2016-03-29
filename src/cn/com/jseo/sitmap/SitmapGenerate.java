@@ -39,11 +39,14 @@ public class SitmapGenerate {
 //	</urlset>
 
    
-   public void generateSitMap(String sitUrl,String dest) throws Exception{
+   public void generateSitMap(String dest,String... sitUrls) throws Exception{
 	   LinkHunter hunter=new LinkHunter();
-	   List<String> allLinks=hunter.getAllSitLinks(sitUrl);
+	 
+	   List<String> allLinks=hunter.getAllSitLinks(sitUrls);
 	   
 	   Element root = DocumentHelper.createElement("urlset");  
+	   root.addNamespace("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
+	   root.addNamespace("mobile", "http://www.sitemaps.org/schemas/sitemap/0.9");
        Document document = DocumentHelper.createDocument(root);  
        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
          String lastMod=sdf.format(new Date());
@@ -52,6 +55,8 @@ public class SitmapGenerate {
     	   url.addElement("loc").setText(link);
     	   url.addElement("lastmod").addText(lastMod);
     	   url.addElement("changefreq").addText("daily");
+    	   url.addElement("changefreq").addText("daily");
+    	   url.addElement("mobile:mobile").addAttribute("type","pc,mobile");
        }
        //把生成的xml文档存放在硬盘上  true代表是否换行  
        OutputFormat format = new OutputFormat("    ",true);  
@@ -75,6 +80,6 @@ public class SitmapGenerate {
 	 
 	 public static void main(String[] args) throws Exception {
 		 SitmapGenerate generate=new SitmapGenerate();
-		 generate.generateSitMap("http://justin-x.cn","e:/sitMap.xml");
+		 generate.generateSitMap("F:/xiongqi215.github.io/public/sitemap.xml","http://justin-x.cn","http://justin-x.cn/page/2/");
 	}
 }

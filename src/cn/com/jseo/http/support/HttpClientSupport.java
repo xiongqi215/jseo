@@ -120,11 +120,11 @@ public class HttpClientSupport {
 
 	public static void main(String[] args) throws Exception {
 		//测试百度主动推送
-		String url="http://data.zz.baidu.com/urls?site=justin-x.cn&token=SP174q9CqvSyOjn7";
+		String url="http://data.zz.baidu.com/urls?site=justin-x.cn&token=SP174q9CqvSyOjn7&type=original";
 		HttpClientSupport client = new HttpClientSupport();
 		
 		 LinkHunter hunter=new LinkHunter();
-		   List<String> allLinks=hunter.getAllSitLinks("http://justin-x.cn");
+		   List<String> allLinks=hunter.getAllSitLinks("http://justin-x.cn","http://justin-x.cn/page/2/");
 		   StringBuffer buffer=new StringBuffer();
 		   for(String s:allLinks){
 			   buffer.append(s).append("%n");
