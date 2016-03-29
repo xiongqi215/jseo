@@ -12,7 +12,7 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 
-import cn.com.jseo.link.LinkHunter;
+import cn.com.jseo.link.RemoteLinkHunter;
 
 public class SitmapGenerate {
 //	<?xml version="1.0" encoding="utf-8"?>
@@ -40,7 +40,7 @@ public class SitmapGenerate {
 
    
    public void generateSitMap(String dest,String... sitUrls) throws Exception{
-	   LinkHunter hunter=new LinkHunter();
+	   RemoteLinkHunter hunter=new RemoteLinkHunter();
 	 
 	   List<String> allLinks=hunter.getAllSitLinks(sitUrls);
 	   
@@ -80,6 +80,6 @@ public class SitmapGenerate {
 	 
 	 public static void main(String[] args) throws Exception {
 		 SitmapGenerate generate=new SitmapGenerate();
-		 generate.generateSitMap("F:/xiongqi215.github.io/public/sitemap.xml","http://justin-x.cn","http://justin-x.cn/page/2/");
+		 generate.generateSitMap("E:/xiongqi215.github.io/public/sitemap.xml","http://justin-x.cn","http://justin-x.cn/page/2/");
 	}
 }

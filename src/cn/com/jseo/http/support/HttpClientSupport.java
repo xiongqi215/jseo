@@ -21,7 +21,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import cn.com.jseo.link.LinkHunter;
+import cn.com.jseo.link.RemoteLinkHunter;
 
 public class HttpClientSupport {
 	private Log log = LogFactory.getLog(this.getClass());
@@ -123,7 +123,7 @@ public class HttpClientSupport {
 		String url="http://data.zz.baidu.com/urls?site=justin-x.cn&token=SP174q9CqvSyOjn7&type=original";
 		HttpClientSupport client = new HttpClientSupport();
 		
-		 LinkHunter hunter=new LinkHunter();
+		 RemoteLinkHunter hunter=new RemoteLinkHunter();
 		   List<String> allLinks=hunter.getAllSitLinks("http://justin-x.cn","http://justin-x.cn/page/2/");
 		   StringBuffer buffer=new StringBuffer();
 		   for(String s:allLinks){
